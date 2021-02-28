@@ -1,22 +1,23 @@
 # Docker - Getting Started
 
 ### Docker Commands
-The first docker we will run return docker version and verifies it is working:
+The first docker command we will run return docker version and verifies it is working.
 ```sh
 $ docker version
 ```
 
-Next we see what all commands we can run in docker
+Next we see what see all commands we can run in docker
 ```
 $ docker
 ```
-It is a long list of commands, bust as part of our demo we will be using only a few of them.
+It is a long list of commands, bus as part of our demo we will be using only a few of them.
+
 
 Now, lets run a container. For this step lets first pull a docker image using below command.  
 ```
 $ docker pull busybox
 ```
-The pull command fetches the busybox image from the Docker registry and saves it to our system. To know more about [Busybox](https://en.wikipedia.org/wiki/BusyBox). To see the list of docker image on your system, run
+The pull command fetches the busybox image from the Docker registry and saves it to our system. To know more about [Busybox](https://en.wikipedia.org/wiki/BusyBox). To see the list of docker image on the system, run
 ```
 $ docker image ls
 ```
@@ -48,7 +49,7 @@ Oh no, what have we done? Is everything okay?
 $ docker run -it busybox sh
 $ ls
 ```
-This is where you ge the immutable property of the `image`, whatever happens to the container, it does not affect the image.
+This is where you get to see the immutable property of the `image`, whatever happens to the container, it does not affect the image.
 
 If we want a container to stick around, we need it to run in daemon mode using `-d` arg. In this mode it will create the container and treat it as a long running process or a service. We also provide a name using `--name` for easy reference.
 ```
@@ -77,8 +78,40 @@ Similar to github commit and push, we can also push this new image to the docker
 ```
 $ docker push containerdemo/busybox:new
 ```
+Now, to stop a running container we will do
+```
+$ docker container stop busyforlife
+```
 
 
 ### Creating Docker Image from scratch
+To create a new image from scratch we will create a `Dockerfile`. One thing I would like to point is that docker images can be built incrementally, by that I mean that you can take other layers from other images and stack them together and build on top of them.
+```
+FROM ubuntu:18.04
+
+RUN apt-get -y update
+
+# update packages and install
+RUN apt-get install -y openjdk-11-jre-headless wget curl unzip
+
+RUN apt-get -y install git
+RUN apt-get -y install maven
+
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+```
+To build the docker image we need to use `docker build` command and tag it as containerdemo/myjavaimage. 
+**NOTE:** Don't forget the `.` at the end of the command, it means look for Dockrfile in the current directory.
+
+```
+$ docker image build -t containerdemo/myjavaimage .
+```
+To verify it worked, we can list it using
+```
+$ docker images
+```
+Now, finally lets run the `mvn` command to ensure proper environment setup.
+```
+$ docker run java11 mvn --version
+```
 
 
