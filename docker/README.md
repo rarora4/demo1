@@ -111,7 +111,7 @@ $ docker images
 ```
 Now, finally lets run the `mvn` command to ensure proper environment setup.
 ```
-$ docker run java11 mvn --version
+$ docker run ontainerdemo/myjavaimage mvn --version
 ```
 
 
