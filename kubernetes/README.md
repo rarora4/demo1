@@ -12,6 +12,11 @@ $ kubectl
 ```
 It is a long list of commands, bus as part of our demo we will be using only a few of them.
 
+Let us see how many nodes do we have in out cluster, are they ready and what is their role, IP address? 
+```
+$ kubectl get nodes
+# or kubectl get nodes -o wide
+```
 
 Now, lets run a pod. For this step lets first define a YAML definition of the pod specification. Most of the Kubernetes object like Pod, Replicaset, Deployment etc. will have these fields
 
@@ -43,10 +48,13 @@ To check the status of the container run
 ```
 $ kubectl get pod
 ```
-
+To see the node on which the pod is running
+```
+$ kubectl get pod -o wide
+```
 You can verify that internally docker pulled the `alpine` image.
 ```
-$ docker image ls
+$ docker image ls | grep alpine
 ```
 You can use two very useful commands to get more information on the pod using
 ```
@@ -60,7 +68,7 @@ You can also go run commands from within the pod using `kubectl exec` command
 $ kubectl exec -it my-first-pod sh
 ```
 
-Now lets try and create and object of different kind called `deployment`
+Now lets try and create and object of different kind called `deployment`. Save the below YAML in a file called deployment1.yaml
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -84,6 +92,11 @@ spec:
           - "sleep 60m"
         imagePullPolicy: IfNotPresent
         name: alpine
+```
+
+Then, run the same command we ran to create a pod but file name that of the deployment1.yaml
+```
+$ kubectl create -f deployment1.yaml
 ```
 Now if you run the `kubectl get pod` command again, there will be 5 pods with the name `my-first-deployment-*`. Why is that?
 
